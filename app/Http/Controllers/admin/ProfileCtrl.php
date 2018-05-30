@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Barangay;
 use App\Muncity;
 use App\Profiles;
 use App\Pending;
@@ -146,12 +147,14 @@ class ProfileCtrl extends Controller
             $data->update($editData[0]);
             $message = 'updated';
         }
+        $barangays = Barangay::get();
         return view('admin.addProfile',[
             'profileId' => $id,
             'title' => 'Update '.ucfirst($requestName),
             'method' => 'update',
             'data' => $data,
-            'requestName' => $requestName
+            'requestName' => $requestName,
+            'barangays' => $barangays
         ])->with('message',$message);
 
     }
@@ -190,45 +193,13 @@ class ProfileCtrl extends Controller
             $requestName == 'profiles' ? $record = new Profiles() : $record = new Pending();
             $record->updateOrCreate($match,$data);
         }
+        $barangays = Barangay::get();
         return view('admin.addProfile',[
             'title' => 'Add '.ucfirst($requestName),
             'method' => 'create',
-            'requestName' => $requestName
+            'requestName' => $requestName,
+            'barangays' => $barangays,
         ])->with('message',$message);
-    }
-
-    public function store($requestName,Request $req)
-    {
-        $unique_id = $req->fname.$req->mname.$req->lname.date('Ymd',strtotime($req->dob)).$req->barangay;
-        $data = array(
-            'fac_province' => $req->fac_province,
-            'fac_muncity' => $req->fac_muncity,
-            'facility_name' => $req->facility_name,
-            'fname' => $req->fname,
-            'mname' => $req->mname,
-            'lname' => $req->lname,
-            'sitio' => $req->sitio,
-            'barangay' => $req->barangay,
-            'province' => $req->province,
-            'muncity' => $req->muncity,
-            'dob' => $req->dob,
-            'sex' => $req->sex,
-            'dose_screened' => $req->dose_screened,
-            'dose_date_given' => $req->dose_date_given,
-            'dose_age' => $req->dose_age,
-            'validation' => $req->validation,
-            'dose_lot_no' => $req->dose_lot_no,
-            'dose_batch_no' => $req->dose_batch_no,
-            'dose_expiration' => $req->dose_expiration,
-            'dose_AEFI' => $req->dose_AEFI,
-            'remarks' => "$req->remarks",
-            'status' => $requestName
-        );
-        $match = array('unique_id' => $unique_id);
-        $requestName == 'profiles' ? $record = new Profiles() : $record = new Pending();
-        $record->updateOrCreate($match,$data);
-
-        return redirect()->back()->with('message','saved');
     }
 
     public function verify(Request $request){
@@ -252,7 +223,6 @@ class ProfileCtrl extends Controller
             'remarks' => $request->remarks,
             'status' => 'refuse'
         ]);
-
         Session::put('refuse',true);
         return redirect()->to('admin/profiles'.'/'.$request->requestName);
     }

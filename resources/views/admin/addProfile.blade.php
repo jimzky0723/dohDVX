@@ -159,7 +159,17 @@
                             </tr>
                             <tr class="has-group">
                                 <td>Barangay :</td>
-                                <td><input type="text" name="barangay" value="{{ $barangay }}" class="lname form-control" required /> </td>
+                                <td>
+                                    <select name="barangay" id="barangay" class="form-control" required>
+                                        <?php $barangayFind = \App\Barangay::find($barangay); ?>
+                                        <option value="<?php if($barangayFind) echo $barangayFind->id ?>"><?php if($barangayFind) echo $barangayFind->description ?></option>
+                                        @foreach($barangays as $bar)
+                                            @if($bar->id != $barangay)
+                                            <option value="{{ $bar->id }}">{{ $bar->description }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </td>
                             </tr>
                             <tr class="has-group">
                                 <td>Birth Date :</td>
