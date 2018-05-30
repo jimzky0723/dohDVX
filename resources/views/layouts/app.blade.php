@@ -94,7 +94,8 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('admin/profiles') }}"><i class="fa fa-wheelchair"></i> Profiles</a></li>
+                <li><a href="{{ url('admin/profiles/profiles') }}"><i class="fa fa-wheelchair"></i> Profiles</a></li>
+                <li><a href="{{ url('admin/profiles/pending') }}"><i class="fa fa-exclamation"></i> Pending</a></li>
                 <li><a href="{{ url('admin/hospital') }}"><i class="fa fa-building"></i> Hospitals</a></li>
                 <li><a href="{{ url('admin/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
                 <li class="dropdown">
@@ -123,6 +124,7 @@
         <p>All Rights Reserved 2017 | Version 1.0</p>
     </div>
 </footer>
+@include('modal')
 
 
         <!-- Bootstrap core JavaScript

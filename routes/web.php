@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/','HomeCtrl@index');
+Route::match(['POST','GET'],'/','HomeCtrl@index');
 
 Route::get('/logout', function (){
     Session::flush();
@@ -24,16 +24,23 @@ Route::post('/login', 'LoginCtrl@validateLogin');
 //admin page
 Route::get('admin','admin\HomeCtrl@index');
 
-Route::get('admin/profiles','admin\ProfileCtrl@index');
+Route::match(["GET","POST"],'admin/profiles/{requestName}','admin\ProfileCtrl@index');
 Route::get('admin/profiles/upload','admin\ProfileCtrl@upload');
 Route::post('admin/profiles/upload','admin\ProfileCtrl@uploadData');
 
-Route::get('admin/profiles/create','admin\ProfileCtrl@create');
-Route::post('admin/profiles/store','admin\ProfileCtrl@store');
+Route::match(['GET','POST'],'admin/profiles/create/{requestName}','admin\ProfileCtrl@create');
+Route::post('admin/profiles/store/{requestName}','admin\ProfileCtrl@store');
 
-Route::get('admin/profiles/update/{id}','admin\ProfileCtrl@edit');
+Route::match(["GET","POST"],'admin/profiles/update/{id}/{requestName}','admin\ProfileCtrl@edit');
 
 //params
 Route::get('location/muncity/{province_id}','ParamCtrl@getMuncity');
 Route::get('param/age/{dob}','ParamCtrl@getAge');
+
+Route::post('admin/verify','admin\ProfileCtrl@verify');
+Route::post('admin/remove/{requestName}','admin\ProfileCtrl@remove');
+Route::post('admin/refuse/{requestName}','admin\ProfileCtrl@refuse');
+
+//API OPO
+Route::get('pendingApi','ApiCtrl@pendingApi');
 

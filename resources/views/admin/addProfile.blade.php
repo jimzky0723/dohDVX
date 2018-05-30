@@ -3,9 +3,9 @@
 @section('content')
     <?php
     $status = session('status');
-    $url = url('admin/profiles/store');
+    $url = url('admin/profiles/create').'/'.$requestName;
     if($method=='update'){
-        $url = url('admin/profiles/update');
+        $url = url('admin/profiles/update/'.$profileId.'/'.$requestName);
     }
     $unique_id = '';
     $fac_province = '';
@@ -74,19 +74,23 @@
                 {{ $title }}</h3>
             <div class="row">
                 <div class="col-md-12">
-                    @if($status=='saved')
+                    @if(isset($message))
+                        @if($message == 'saved')
                         <div class="alert alert-success">
                             <font class="text-success">
-                                <i class="fa fa-check"></i> 1 profile successfully added!
+                                <i class="fa fa-check"></i> 1 {{ ucfirst($requestName) }} successfully added!
                             </font>
                         </div>
+                         @endif
                     @endif
-                    @if($status=='updated')
-                        <div class="alert alert-success">
-                            <font class="text-success">
-                                <i class="fa fa-check"></i> 1 profile successfully updated!
+                    @if(isset($message))
+                        @if($message == 'updated')
+                        <div class="alert alert-info">
+                            <font class="text-info">
+                                <i class="fa fa-check"></i> 1 {{ ucfirst($requestName) }} successfully updated!
                             </font>
                         </div>
+                        @endif
                     @endif
                     <form method="POST" class="form-horizontal form-submit" id="form-submit" action="{{ $url }}">
                         {{ csrf_field() }}
@@ -114,7 +118,7 @@
                             </tr>
                             <tr class="has-group">
                                 <td>Facility Name :</td>
-                                <td><input type="text" name="facility" value="{{ $facility_name }}" class="lname form-control" required /> </td>
+                                <td><input type="text" name="facility_name" value="{{ $facility_name }}" class="lname form-control" required /> </td>
                             </tr>
 
                             <tr class="has-group">
@@ -132,10 +136,6 @@
                             <tr class="has-group">
                                 <td>House #/Street/Sitio/Purok :</td>
                                 <td><input type="text" name="sitio" value="{{ $sitio }}" class="lname form-control" required /> </td>
-                            </tr>
-                            <tr class="has-group">
-                                <td>Barangay :</td>
-                                <td><input type="text" name="barangay" value="{{ $barangay }}" class="lname form-control" required /> </td>
                             </tr>
                             <tr class="has-group">
                                 <td>Province :</td>
@@ -156,6 +156,10 @@
 
                                     </select>
                                 </td>
+                            </tr>
+                            <tr class="has-group">
+                                <td>Barangay :</td>
+                                <td><input type="text" name="barangay" value="{{ $barangay }}" class="lname form-control" required /> </td>
                             </tr>
                             <tr class="has-group">
                                 <td>Birth Date :</td>
@@ -223,21 +227,30 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <a href="{{ asset('admin/profiles') }}" class="btn btn-sm btn-default">
+                                    <a href="{{ asset('admin/profiles').'/'.$requestName }}" class="btn btn-sm btn-default">
                                         <i class="fa fa-arrow-left"></i> Back
                                     </a>
                                     @if($method=='create')
                                     <button type="submit" class="btn btn-success btn-sm">
-                                        <i class="fa fa-send"></i> Add Profile
+                                        <i class="fa fa-send"></i> Add {{ ucfirst($requestName) }}
                                     </button>
                                     @elseif($method=='update')
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </button>
                                     <button type="submit" class="btn btn-success btn-sm">
                                         <i class="fa fa-pencil"></i> Update
                                     </button>
+                                    <a href="{{ asset('admin/profiles') }}" class="btn btn-sm btn-danger" data-dismiss="modal" data-toggle="modal" data-target="#delete">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
                                     @endif
+                                    @if($requestName == 'pending')
+                                    <a href="#" class="btn btn-sm btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#verify">
+                                        <i class="fa fa-question-circle"></i> Verify
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#refuse">
+                                        <i class="fa fa-question-circle"></i> Refuse
+                                    </a>
+                                    @endif
+
                                 </td>
                             </tr>
                         </table>
