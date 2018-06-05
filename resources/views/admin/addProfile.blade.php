@@ -9,6 +9,7 @@
     }
     $unique_id = '';
     $checkup_id = '';
+    $list_number = '';
     $facility_name = '';
     $lname = '';
     $fname = '';
@@ -31,6 +32,7 @@
     if(isset($data)){
         $unique_id = $data->unique_id;
         $checkup_id = $data->checkup_id;
+        $list_number = $data->list_number;
         $facility_name = $data->facility_name;
         $lname = $data->lname;
         $fname = $data->fname;
@@ -92,6 +94,11 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="unique_id" value="{{ $unique_id }}" />
                         <table class="table-input table table-bordered table-hover" border="1">
+                            <tr class="has-group">
+                                <td>List Number :</td>
+                                <td><input type="text" name="list_number" value="{{ $list_number }}" class="lname form-control" required /> </td>
+                            </tr>
+
                             <tr class="has-group">
                                 <td>Facility Name :</td>
                                 <td><input type="text" name="facility_name" value="{{ $facility_name }}" class="lname form-control" required /> </td>

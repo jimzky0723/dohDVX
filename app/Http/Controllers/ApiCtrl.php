@@ -60,7 +60,8 @@ class ApiCtrl extends Controller
                 $muncity = $barangay->muncity_id;
                 $data = array(
                     'unique_id' => $unique_id,
-                    'tsekap_id' => '',
+                    'tsekap_id' => $request->tsekap_id,
+                    'list_number' => $request->list_number,
                     'facility_name' => $request->facility_name,
                     'fname' => $request->fname,
                     'mname' => $request->mname,
@@ -84,6 +85,10 @@ class ApiCtrl extends Controller
                 $match = array('unique_id' => $unique_id);
                 $record = new Profiles();
                 $record->updateOrCreate($match,$data);
+
+                return array(
+                    'status' => 'Successfully Registered'
+                );
                 break;
         }
 
