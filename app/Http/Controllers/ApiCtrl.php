@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use App\Pending;
-use App\Profiles;
+use App\profiles;
 
 class ApiCtrl extends Controller
 {
@@ -17,24 +16,46 @@ class ApiCtrl extends Controller
 
     }
 
-    public function pendingApi(Request $request){
-        $offset = $request->offset;
-        $keyword = $request->keyword;
+    public function api(Request $request){
+        switch ($request->cmd){
+            case 'profiles' :
+                    $offset = $request->offset;
+                    $keyword = $request->keyword;
+                    $record = Profiles::
+                    leftjoin('barangay', 'profiles.barangay', '=', 'barangay.id')
+                        ->leftjoin('muncity', 'profiles.muncity', '=', 'muncity.id')
+                        ->select(DB::raw("CONCAT(profiles.fname,' ',profiles.lname) AS full_name"),DB::raw("CONCAT(barangay.description,', ',muncity.description) AS address"),'profiles.dob','profiles.remarks','profiles.status','profiles.id')
+                        ->where(function($q) use ($keyword){
+                            $q->where('fname','like',"$keyword%")
+                                ->orWhere('lname','like',"$keyword%");
+                        })
+                        ->where('fname','<>','')
+                        ->where('lname','<>','')
+                        ->orderBy('fname','asc')
+                        ->offset($offset)->limit(10)->get();
 
-        $record = Pending::
-            leftjoin('barangay', 'pending.barangay', '=', 'barangay.id')
-            ->leftjoin('muncity', 'pending.muncity', '=', 'muncity.id')
-            ->select(DB::raw("CONCAT(pending.fname,' ',pending.lname) AS full_name"),DB::raw("CONCAT(barangay.description,', ',muncity.description) AS address"),'pending.dob','pending.remarks','pending.status','pending.id')
-            ->where(function($q) use ($keyword){
-                $q->where('fname','like',"$keyword%")
-                    ->orWhere('lname','like',"$keyword%");
-            })
-            ->where('fname','<>','')
-            ->where('lname','<>','')
-                ->orderBy('fname','asc')
-                ->offset($offset)->limit(10)->get();
+                    return $record;
+                break;
+            case 'dose' :
+                return Profiles::where('tsekap_id','=',$request->id)->get(
+                    [
+                        'list_number',
+                        'facility_name',
+                        'dose_screened',
+                        'dose_date_given',
+                        'dose_lot_no',
+                        'dose_batch_no',
+                        'dose_expiration',
+                        'dose_AEFI',
+                        'remarks',
+                        'status'
+                    ]
+                );
+                break;
+        }
 
-        return $record;
+
     }
+
 
 }

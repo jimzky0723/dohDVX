@@ -23,13 +23,15 @@ class ProfileCtrl extends Controller
     public function index($requestName,Request $request)
     {
         $keyword = $request->keyword;
-        $requestName == 'profiles' ? $profile = new Profiles() : $profile = new Pending();
+        $requestName == 'profiles' ? $status = 'approve' : $status = 'pending';
+        $profile = new Profiles();
         $records = $profile->
             where(function($q) use ($keyword){
                 $q->where('fname','like',"%$keyword%")
                     ->orWhere('mname','like',"%$keyword%")
                     ->orWhere('lname','like',"%$keyword%");
             })
+            ->where('status','=',$status)
             ->orderBy('lname','asc')
             ->paginate(30);
         return view('admin.profiles',[
@@ -121,6 +123,7 @@ class ProfileCtrl extends Controller
                     'dose_expiration' => isset($content[20]) ? date('Y-m-d',strtotime($content[20])) : '',
                     'dose_AEFI' => isset($content[21]) ? $content[21] : '',
                     'remarks' => isset($content[22]) ? $content[22] : '',
+                    'status' => 'pending'
                 );
                 $match = array('unique_id' => $unique_id);
                 Profiles::updateOrCreate($match,$data);
@@ -139,7 +142,8 @@ class ProfileCtrl extends Controller
     public function edit($id,$requestName,Request $request)
     {
         $message = '';
-        $requestName == 'profiles' ? $record = new Profiles() : $record = new Pending();
+        $requestName == 'profiles' ? $status = 'approve' : $status = 'pending';
+        $record = new Profiles();
         $data = $record->find($id);
         if ($request->isMethod('post')) {
             $editData[] = $request->all();
@@ -148,13 +152,15 @@ class ProfileCtrl extends Controller
             $message = 'updated';
         }
         $barangays = Barangay::get();
+        $provinces = Province::get();
         return view('admin.addProfile',[
             'profileId' => $id,
             'title' => 'Update '.ucfirst($requestName),
             'method' => 'update',
             'data' => $data,
             'requestName' => $requestName,
-            'barangays' => $barangays
+            'barangays' => $barangays,
+            'provinces' => $provinces
         ])->with('message',$message);
 
     }
@@ -164,10 +170,11 @@ class ProfileCtrl extends Controller
         $message = '';
         if ($req->isMethod('post')) {
             $message = 'saved';
+            $requestName == 'profiles' ? $status = 'approve' : $status = 'pending';
             $unique_id = $req->fname.$req->mname.$req->lname.date('Ymd',strtotime($req->dob)).$req->barangay;
             $data = array(
-                'fac_province' => $req->fac_province,
-                'fac_muncity' => $req->fac_muncity,
+                'unique_id' => $unique_id,
+                'tsekap_id' => '',
                 'facility_name' => $req->facility_name,
                 'fname' => $req->fname,
                 'mname' => $req->mname,
@@ -187,44 +194,83 @@ class ProfileCtrl extends Controller
                 'dose_expiration' => $req->dose_expiration,
                 'dose_AEFI' => $req->dose_AEFI,
                 'remarks' => "$req->remarks",
-                'status' => $requestName
+                'status' => $status
             );
             $match = array('unique_id' => $unique_id);
-            $requestName == 'profiles' ? $record = new Profiles() : $record = new Pending();
+            $record = new Profiles();
             $record->updateOrCreate($match,$data);
         }
         $barangays = Barangay::get();
+        $provinces = Province::get();
         return view('admin.addProfile',[
             'title' => 'Add '.ucfirst($requestName),
             'method' => 'create',
             'requestName' => $requestName,
             'barangays' => $barangays,
+            'provinces' => $provinces,
         ])->with('message',$message);
     }
 
     public function verify(Request $request){
-        $request->request->add(Pending::find($request->profileId)->attributesToArray());
-        $this->create('profiles',$request);
-        Pending::find($request->profileId)->delete();
+        Profiles::find($request->profileId)->update([
+            'status' => 'approve'
+        ]);
         Session::put('verified',true);
         return redirect()->to('admin/profiles'.'/'.$request->requestName);
     }
 
     public function remove(Request $request){
-        $request->requestName == 'profiles' ? $record = new Profiles() : $record = new Profiles();
+        $record = new Profiles();
         $record->find($request->profileId)->delete();
         Session::put('remove',true);
         return redirect()->to('admin/profiles'.'/'.$request->requestName);
     }
 
     public function refuse(Request $request){
-        $request->requestName == 'profiles' ? $record = new Profiles() : $record = new Profiles();
+        $record = new Profiles();
         $record->find($request->profileId)->update([
             'remarks' => $request->remarks,
             'status' => 'refuse'
         ]);
         Session::put('refuse',true);
         return redirect()->to('admin/profiles'.'/'.$request->requestName);
+    }
+
+    function getStaticAge(Request $request)
+    {
+        $d1 = strtotime($request->dob);
+        $d2 = strtotime($request->date);
+        $min_date = min($d1, $d2);
+        $max_date = max($d1, $d2);
+
+        $age = 0;
+        while (($min_date = strtotime("+1 YEAR", $min_date)) <= $max_date) {
+            $age++;
+        }
+
+        if($age == 0){
+            $d1 = strtotime($request->dob);
+            $d2 = strtotime($request->date);
+            $min_date = min($d1, $d2);
+            $max_date = max($d1, $d2);
+
+            while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                $age++;
+            }
+            if($age == 0){
+                $d1 = strtotime($request->dob);
+                $d2 = strtotime($request->date);
+                $min_date = min($d1, $d2);
+                $max_date = max($d1, $d2);
+
+                while (($min_date = strtotime("+1 DAY", $min_date)) <= $max_date) {
+                    $age++;
+                }
+                return '<small>('.$age.' D/o)</small>';
+            }
+            return '<small>('.$age.' M/o)</small>';
+        }
+        return $age;
     }
 
 }

@@ -8,13 +8,11 @@
         $url = url('admin/profiles/update/'.$profileId.'/'.$requestName);
     }
     $unique_id = '';
-    $fac_province = '';
-    $fac_muncity = '';
+    $checkup_id = '';
     $facility_name = '';
     $lname = '';
     $fname = '';
     $mname = '';
-    $sitio = '';
     $barangay = '';
     $muncity = '';
     $province = '';
@@ -23,7 +21,7 @@
     $dose_screened = '';
     $dose_date_given = '';
     $dose_age = '';
-    $validation = 0;
+    $validation = '';
     $dose_lot_no = '';
     $dose_batch_no = '';
     $dose_expiration = '';
@@ -32,13 +30,11 @@
 
     if(isset($data)){
         $unique_id = $data->unique_id;
-        $fac_province = $data->fac_province;
-        $fac_muncity = $data->fac_muncity;
+        $checkup_id = $data->checkup_id;
         $facility_name = $data->facility_name;
         $lname = $data->lname;
         $fname = $data->fname;
         $mname = $data->mname;
-        $sitio = $data->sitio;
         $barangay = $data->barangay;
         $muncity = $data->muncity;
         $province = $data->province;
@@ -97,26 +93,6 @@
                         <input type="hidden" name="unique_id" value="{{ $unique_id }}" />
                         <table class="table-input table table-bordered table-hover" border="1">
                             <tr class="has-group">
-                                <td>Fac_Province :</td>
-                                <td>
-                                    <select name="fac_province" id="fac_province" class="form-control" required>
-                                        <option value="">Select Province...</option>
-                                        <option {{ ($fac_province==1) ? 'selected': '' }} value="1">Bohol</option>
-                                        <option {{ ($fac_province==2) ? 'selected': '' }} value="2">Cebu</option>
-                                        <option {{ ($fac_province==3) ? 'selected': '' }} value="3">Negros Oriental</option>
-                                        <option {{ ($fac_province==4) ? 'selected': '' }} value="4">Siquijor</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="has-group">
-                                <td>Fac_Municipality/City :</td>
-                                <td>
-                                    <select name="fac_muncity" id="fac_muncity" class="form-control" required>
-
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="has-group">
                                 <td>Facility Name :</td>
                                 <td><input type="text" name="facility_name" value="{{ $facility_name }}" class="lname form-control" required /> </td>
                             </tr>
@@ -134,18 +110,16 @@
                                 <td><input type="text" name="lname" value="{{ $lname }}" class="lname form-control" required /> </td>
                             </tr>
                             <tr class="has-group">
-                                <td>House #/Street/Sitio/Purok :</td>
-                                <td><input type="text" name="sitio" value="{{ $sitio }}" class="lname form-control" required /> </td>
-                            </tr>
-                            <tr class="has-group">
                                 <td>Province :</td>
                                 <td>
                                     <select name="province" id="province" class="form-control" required>
-                                        <option value="">Select Province...</option>
-                                        <option {{ ($province==1) ? 'selected': '' }} value="1">Bohol</option>
-                                        <option {{ ($province==2) ? 'selected': '' }} value="2">Cebu</option>
-                                        <option {{ ($province==3) ? 'selected': '' }} value="3">Negros Oriental</option>
-                                        <option {{ ($province==4) ? 'selected': '' }} value="4">Siquijor</option>
+                                        <?php $provinceFind = \App\Province::find($province); ?>
+                                        <option value="<?php if($provinceFind) echo $provinceFind->id ?>"><?php if($provinceFind) echo $provinceFind->description ?></option>
+                                        @foreach($provinces as $prov)
+                                            @if( $prov->id != $province )
+                                                <option value="{{ $prov->id }}">{{ $prov->description }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </td>
                             </tr>
@@ -153,7 +127,8 @@
                                 <td>Municipality/City :</td>
                                 <td>
                                     <select name="muncity" id="muncity" class="form-control" required>
-
+                                        <?php $muncityFind = \App\Muncity::find($muncity); ?>
+                                        <option value="<?php if($muncityFind) echo $muncityFind->id ?>"><?php if($muncityFind) echo $muncityFind->description ?></option>
                                     </select>
                                 </td>
                             </tr>
@@ -163,11 +138,6 @@
                                     <select name="barangay" id="barangay" class="form-control" required>
                                         <?php $barangayFind = \App\Barangay::find($barangay); ?>
                                         <option value="<?php if($barangayFind) echo $barangayFind->id ?>"><?php if($barangayFind) echo $barangayFind->description ?></option>
-                                        @foreach($barangays as $bar)
-                                            @if($bar->id != $barangay)
-                                            <option value="{{ $bar->id }}">{{ $bar->description }}</option>
-                                            @endif
-                                        @endforeach
                                     </select>
                                 </td>
                             </tr>
@@ -195,7 +165,12 @@
                             </tr>
                             <tr class="has-group">
                                 <td>1st Dose Date Given :</td>
-                                <td><input type="date" name="dose_date_given" value="{{ $dose_date_given }}" class="form-control" required /> </td>
+                                <td>
+                                    <div class="form-inline">
+                                        <input type="date" name="dose_date_given" id="dose_date_given" value="{{ $dose_date_given }}" class="form-control" required />
+                                        <button class="btn btn-primary" type="button" onclick="checkAge();">Validate</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr class="has-group">
                                 <td>1st Dose Age :</td>
@@ -276,53 +251,35 @@
 
 @section('js')
 <script>
-    @if($province)
-        var province = "{{ $province }}";
-        filterProvince(province);
-        var muncity = "{{ $muncity }}";
-        $('#muncity').val(muncity);
-    @endif
 
-    @if($fac_province)
-        var fac_province = "{{ $fac_province }}";
-        filterProvinceF(fac_province);
-        var fac_muncity = "{{ $fac_muncity }}";
-        $('#fac_muncity').val(fac_muncity);
-    @endif
-
-    $('#fac_province').on('change',function(){
-        $('.loading').show();
+    $('#province').on('change',function(){
         var province_id = $(this).val();
-        filterProvinceF(province_id);
-        $('#province').val(province_id);
-        filterProvince(province_id);
+        filterMunicipality(province_id);
+        filterBarangay(province_id,'province');
     });
 
-    $('#fac_muncity').on('change',function(){
-        var muncity_id = $(this).val();
-        $('#muncity').val(muncity_id);
+
+    $('#muncity').on('change',function(){
+        var municipality_id = $(this).val();
+        filterBarangay(municipality_id,'municipality');
     });
 
-    function filterProvinceF(province_id)
+    function filterBarangay(id,request)
     {
-        $('#fac_muncity').empty();
-        var data = getMuncity(province_id);
-        jQuery.each(data, function(i,val){
-            $('#fac_muncity').append($('<option>', {
-                value: val.id,
-                text : val.description
-            }));
-
+        $('#barangay').empty();
+        var appendId;
+        jQuery.each(<?php echo $barangays ?>, function(i,val){
+            request == 'municipality' ? appendId = val.muncity_id : appendId = val.province_id;
+            if( id == appendId ){
+                $('#barangay').append($('<option>', {
+                    value: val.id,
+                    text : val.description
+                }));
+            }
         });
     }
 
-    $('#province').on('change',function(){
-        $('.loading').show();
-        var province_id = $(this).val();
-        filterProvince(province_id);
-    });
-
-    function filterProvince(province_id)
+    function filterMunicipality(province_id)
     {
         $('#muncity').empty();
         var data = getMuncity(province_id);
@@ -348,44 +305,39 @@
                 $('.loading').hide();
             }
         });
+
         return tmp;
-
     }
-</script>
 
-<script>
-    function validate()
+    function checkAge()
     {
-        var age = $('#dose_age').val();
-        if(age>8 && age<15){
-            $('#validation').val(1);
-        }else{
-            $('#validation').val(0);
-        }
+        var dob = $("#dob").val();
+        var dose_date_given = $("#dose_date_given").val();
+        var json = {
+            "dob" : dob,
+            "date" : dose_date_given,
+            "_token" : "<?php echo csrf_token(); ?>",
+        };
+        var url = "<?php echo asset('getAge') ?>";
+        console.log(json);
+        $.post(url,json,function(result){
+            $("#dose_age").val(result);
+            if( result <= 14 && result >= 9 ){
+                $("#validation").val('Yes');
+            } else {
+                $("#validation").val('No');
+            }
+        });
     }
-    {{--var dob = '';--}}
-    {{--$('#dob').on('keyup',function(){--}}
-        {{--dob = $(this).val();--}}
-        {{--getAge();--}}
-    {{--});--}}
 
-    {{--function getAge()--}}
-    {{--{--}}
-        {{--var url = "{{ url('param/age') }}";--}}
-        {{--if(dob){--}}
-            {{--$.ajax({--}}
-                {{--url: url+'/'+dob,--}}
-                {{--type: 'GET',--}}
-                {{--success: function(data){--}}
-                    {{--console.log(data);--}}
-                {{--},--}}
-                {{--error: function (xhr, ajaxOptions, thrownError) {--}}
-                    {{--console.log(xhr.status);--}}
-                    {{--console.log(thrownError);--}}
-                {{--}--}}
-            {{--})--}}
-        {{--}--}}
-    {{--}--}}
+    $("form").submit(function(){
+        if( $("#validation").val() == '' ){
+            alert('Please validate first');
+            return false;
+        }
+    });
+
 </script>
+
 @endsection
 

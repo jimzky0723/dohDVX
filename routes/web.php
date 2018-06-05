@@ -40,7 +40,9 @@ Route::get('param/age/{dob}','ParamCtrl@getAge');
 Route::post('admin/verify','admin\ProfileCtrl@verify');
 Route::post('admin/remove/{requestName}','admin\ProfileCtrl@remove');
 Route::post('admin/refuse/{requestName}','admin\ProfileCtrl@refuse');
+Route::match(['GET','POST'],'getStaticAge','admin\ProfileCtrl@getStaticAge');
+Route::post('getAge','admin\ProfileCtrl@getStaticAge');
 
 //API OPO
-Route::get('pendingApi','ApiCtrl@pendingApi');
+Route::match(['GET','POST'],'api','ApiCtrl@api');
 

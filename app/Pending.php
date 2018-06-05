@@ -9,14 +9,12 @@ class Pending extends Model
     protected $table = 'pending';
     protected $fillable = [
         'unique_id',
+        'tsekap_id',
         'list_number',
-        'fac_province',
-        'fac_muncity',
         'facility_name',
         'lname',
         'fname',
         'mname',
-        'sitio',
         'barangay',
         'muncity',
         'province',
@@ -31,6 +29,7 @@ class Pending extends Model
         'dose_batch_no',
         'dose_expiration',
         'dose_AEFI',
-        'remarks'
+        'remarks',
+        'status'
     ];
 }
