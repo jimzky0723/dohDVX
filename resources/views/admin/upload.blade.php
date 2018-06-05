@@ -22,7 +22,7 @@
     <div class="col-md-9">
         <div class="jim-content">
             <h3 class="page-header">
-                <a href="{{ url('admin/profiles') }}" class="btn btn-xs btn-default"><i class="fa fa-arrow-left"></i> Back</a>
+                <a href="{{ url('admin/profiles').'/'.$requestName }}" class="btn btn-xs btn-default"><i class="fa fa-arrow-left"></i> Back</a>
                 Upload Data</h3>
             <div class="row">
                 <div class="col-md-12">

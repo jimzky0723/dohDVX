@@ -42,10 +42,11 @@ class ProfileCtrl extends Controller
         ]);
     }
 
-    public function upload()
+    public function upload($requestName)
     {
         return view('admin.upload',[
-            'title' => 'Upload Dengvaxia Data'
+            'title' => 'Upload Dengvaxia Data',
+            'requestName' => $requestName
         ]);
     }
 
@@ -72,7 +73,7 @@ class ProfileCtrl extends Controller
         }
     }
 
-    function uploadData(Request $req)
+    function uploadData(Request $req,$requestName)
     {
         $content = $req->data;
         $dateNow = date('Y-m-d H:i:s');
