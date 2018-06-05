@@ -22,7 +22,7 @@
                     <a href="{{ asset('admin/profiles/create').'/'.$requestName }}" class="btn btn-sm btn-info">
                         <i class="fa fa-user-plus"></i> Add {{ ucfirst($requestName) }}
                     </a>
-                    <a href="{{ asset('admin/upload') }}" class="btn btn-sm btn-success">
+                    <a href="{{ asset('admin/upload').'/'.$requestName }}" class="btn btn-sm btn-success">
                         <i class="fa fa-file-excel-o"></i> Upload Data
                     </a>
                     @if($requestName == 'profiles')

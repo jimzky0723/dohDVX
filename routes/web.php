@@ -25,8 +25,8 @@ Route::post('/login', 'LoginCtrl@validateLogin');
 Route::get('admin','admin\HomeCtrl@index');
 
 Route::match(["GET","POST"],'admin/profiles/{requestName}','admin\ProfileCtrl@index');
-Route::get('admin/upload','admin\ProfileCtrl@upload');
-Route::post('admin/upload','admin\ProfileCtrl@uploadData');
+Route::get('admin/upload/{requestName}','admin\ProfileCtrl@upload');
+Route::post('admin/upload/{requestName}','admin\ProfileCtrl@uploadData');
 
 Route::match(['GET','POST'],'admin/profiles/create/{requestName}','admin\ProfileCtrl@create');
 Route::post('admin/profiles/store/{requestName}','admin\ProfileCtrl@store');
