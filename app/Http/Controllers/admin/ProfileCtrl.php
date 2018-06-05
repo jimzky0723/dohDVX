@@ -49,6 +49,18 @@ class ProfileCtrl extends Controller
         ]);
     }
 
+    public function getBarangayID($string,$id)
+    {
+        $brgy = Barangay::where('description','like',"%$string%")
+            ->where('muncity_id',$id)
+            ->first();
+        if($brgy){
+            return $brgy->id;
+        }else{
+            return 0;
+        }
+    }
+
     public function getMuncityID($string,$id)
     {
         $muncity = Muncity::where('description','like',"%$string%")
@@ -80,16 +92,15 @@ class ProfileCtrl extends Controller
         foreach($content as $row){
             $content = str_getcsv($row, ",", '"');
             if(isset($content[4])){
-                $fac_province = self::getProvinceID($content[1]);
-                $fac_muncity = self::getMuncityID($content[2],$fac_province);
 
                 $province = self::getProvinceID($content[10]);
                 $muncity = self::getMuncityID($content[9],$province);
+                $barangay = self::cleanString(utf8_decode($content[8]));
+                $barangay = self::getBarangayID($barangay,$muncity);
 
                 $fname = self::cleanString(utf8_decode($content[5]));
                 $mname = self::cleanString(utf8_decode($content[6]));
                 $lname = self::cleanString(utf8_decode($content[4]));
-                $barangay = self::cleanString(utf8_decode($content[8]));
 
 
                 $tmp = array(
@@ -102,13 +113,10 @@ class ProfileCtrl extends Controller
                 $unique_id = implode("",$tmp);
                 $data = array(
                     'list_number' => $content[2].'-'.$content[0],
-                    'fac_province' => $fac_province,
-                    'fac_muncity' => $fac_muncity,
                     'facility_name' => isset($content[3]) ? $content[3] : '',
                     'lname' => $lname,
                     'fname' => $fname,
                     'mname' => $mname,
-                    'sitio' => isset($content[7]) ? $content[7] : '',
                     'barangay' => $barangay,
                     'muncity' => $muncity,
                     'province' => $province,
