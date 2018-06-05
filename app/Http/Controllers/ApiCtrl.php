@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Barangay;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,38 @@ class ApiCtrl extends Controller
                         'status'
                     ]
                 );
+                break;
+            case 'register' :
+                $unique_id = $request->fname.$request->mname.$request->lname.date('Ymd',strtotime($request->dob)).$request->barangay;
+                $barangay = Barangay::find($request->barangay);
+                $province = $barangay->province_id;
+                $muncity = $barangay->muncity_id;
+                $data = array(
+                    'unique_id' => $unique_id,
+                    'tsekap_id' => '',
+                    'facility_name' => $request->facility_name,
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'barangay' => $request->barangay,
+                    'province' => $province,
+                    'muncity' => $muncity,
+                    'dob' => $request->dob,
+                    'sex' => $request->sex,
+                    'dose_screened' => $request->dose_screened,
+                    'dose_date_given' => $request->dose_date_given,
+                    'dose_age' => $request->dose_age,
+                    'validation' => $request->validation,
+                    'dose_lot_no' => $request->dose_lot_no,
+                    'dose_batch_no' => $request->dose_batch_no,
+                    'dose_expiration' => $request->dose_expiration,
+                    'dose_AEFI' => $request->dose_AEFI,
+                    'remarks' => "$request->remarks",
+                    'status' => 'pending'
+                );
+                $match = array('unique_id' => $unique_id);
+                $record = new Profiles();
+                $record->updateOrCreate($match,$data);
                 break;
         }
 

@@ -187,7 +187,6 @@ class ProfileCtrl extends Controller
                 'fname' => $req->fname,
                 'mname' => $req->mname,
                 'lname' => $req->lname,
-                'sitio' => $req->sitio,
                 'barangay' => $req->barangay,
                 'province' => $req->province,
                 'muncity' => $req->muncity,
