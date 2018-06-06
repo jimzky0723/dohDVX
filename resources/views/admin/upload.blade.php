@@ -132,6 +132,7 @@
                             var p = Math.round(add);
                             $('.progress-bar').html(p+'%');
                             $('.progress-bar').css('width',p+'%');
+                            $(document).attr("title", p+'% - Uploading Data');
                             //upload data
                             if(p==100){
                                 setTimeout(function(){
@@ -140,8 +141,13 @@
                                     $('.progress-bar').addClass('progress-bar-success');
                                     $('.progress-bar').html('Complete');
                                     $('.download-text').html('Upload Complete');
+                                    $(document).attr("title", 'Upload Complete');
                                     $('.btn-submit').attr('disabled',false);
                                 },2000);
+
+                                setTimeout(function(){
+                                    window.location.href = "{{ url('admin/upload/result') }}";
+                                },3000);
                             }
                             setTimeout(sendData,1000);
                         };
@@ -157,7 +163,7 @@
 
             function sendData()
             {
-                var offsetUrl = "{{ url('admin/profiles/upload') }}";
+                var offsetUrl = "{{ url('admin/upload') }}";
 
                 $.ajax({
                     url: offsetUrl,

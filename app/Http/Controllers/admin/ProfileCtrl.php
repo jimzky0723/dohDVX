@@ -44,9 +44,34 @@ class ProfileCtrl extends Controller
 
     public function upload($requestName)
     {
+        if($requestName=='result')
+        {
+            return self::uploadResult();
+        }
+
+        Session::forget('error');
+        Session::forget('count_added');
+        Session::forget('count_updated');
+//        Session::push('error','');
+//        Session::push('count_created','');
+//        Session::push('count_updated','');
+
         return view('admin.upload',[
             'title' => 'Upload Dengvaxia Data',
             'requestName' => $requestName
+        ]);
+    }
+
+    public function uploadResult()
+    {
+        $count_added = count(Session::get('count_updated'));
+        //print_r(count($sample));
+        return view('admin.uploadResult',[
+            'title' => 'Upload Result',
+            'count_added' => count(Session::get('count_added')),
+            'count_updated' => count(Session::get('count_updated')),
+            'count_error' => count(Session::get('error')),
+            'error_list' => Session::get('error')
         ]);
     }
 
@@ -85,7 +110,7 @@ class ProfileCtrl extends Controller
         }
     }
 
-    function uploadData(Request $req,$requestName)
+    function uploadData(Request $req)
     {
         $content = $req->data;
         $dateNow = date('Y-m-d H:i:s');
@@ -107,35 +132,57 @@ class ProfileCtrl extends Controller
                 $tmp = array(
                     $fname,
                     $mname,
-                    $mname,
+                    $lname,
                     date('Ymd',strtotime($content[11])),
                     $barangay
                 );
-                $unique_id = implode("",$tmp);
-                $data = array(
-                    'list_number' => $content[2].'-'.$content[0],
-                    'facility_name' => isset($content[3]) ? $content[3] : '',
-                    'lname' => $lname,
-                    'fname' => $fname,
-                    'mname' => $mname,
-                    'barangay' => $barangay,
-                    'muncity' => $muncity,
-                    'province' => $province,
-                    'dob' => isset($content[11]) ? date('Y-m-d',strtotime($content[11])) : '',
-                    'sex' => isset($content[13]) ? $content[13] : '',
-                    'dose_screened' => isset($content[14]) ? $content[14] : '',
-                    'dose_date_given' => isset($content[15]) ? date('Y-m-d',strtotime($content[15])) : '',
-                    'dose_age' => isset($content[16]) ? $content[16] : '',
-                    'validation' => isset($content[17]) ? $content[17] : '',
-                    'dose_lot_no' => isset($content[18]) ? $content[18] : '',
-                    'dose_batch_no' => isset($content[19]) ? $content[19] : '',
-                    'dose_expiration' => isset($content[20]) ? date('Y-m-d',strtotime($content[20])) : '',
-                    'dose_AEFI' => isset($content[21]) ? $content[21] : '',
-                    'remarks' => isset($content[22]) ? $content[22] : '',
-                    'status' => 'pending'
-                );
-                $match = array('unique_id' => $unique_id);
-                Profiles::updateOrCreate($match,$data);
+
+                if($barangay==0 || $muncity==0)
+                {
+                    $session = array(
+                        $fname,
+                        $mname,
+                        $lname,
+                        $content[8]
+                    );
+                    Session::push('error',$session);
+                }else{
+                    $unique_id = implode("",$tmp);
+                    $expiration = '0000-00-00';
+                    if(isset($content[20])){
+                        $expiration = date('Y-m-d',strtotime($content[20]));
+                    }
+
+                    $data = array(
+                        'list_number' => $content[0],
+                        'facility_name' => isset($content[3]) ? $content[3] : '',
+                        'lname' => $lname,
+                        'fname' => $fname,
+                        'mname' => $mname,
+                        'barangay' => $barangay,
+                        'muncity' => $muncity,
+                        'province' => $province,
+                        'dob' => isset($content[11]) ? date('Y-m-d',strtotime($content[11])) : '',
+                        'sex' => isset($content[13]) ? $content[13] : '',
+                        'dose_screened' => isset($content[14]) ? $content[14] : '',
+                        'dose_date_given' => isset($content[15]) ? date('Y-m-d',strtotime($content[15])) : '',
+                        'dose_age' => isset($content[16]) ? $content[16] : '',
+                        'validation' => ($content[17]==1) ? 'Yes' : 'No',
+                        'dose_lot_no' => isset($content[18]) ? $content[18] : '',
+                        'dose_batch_no' => isset($content[19]) ? $content[19] : '',
+                        'dose_expiration' => $expiration,
+                        'dose_AEFI' => isset($content[21]) ? $content[21] : '',
+                        'remarks' => isset($content[22]) ? $content[22] : '',
+                        'status' => 'approve'
+                    );
+                    $match = array('unique_id' => $unique_id);
+                    $form = Profiles::updateOrCreate($match,$data);
+                    if($form->wasRecentlyCreated){
+                        Session::push('count_added',1);
+                    }else{
+                        Session::push('count_updated',1);
+                    }
+                }
             }
 
         }
