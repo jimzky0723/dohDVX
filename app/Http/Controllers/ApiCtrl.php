@@ -89,6 +89,7 @@ class ApiCtrl extends Controller
                 return array(
                     'status' => 'Successfully Registered'
                 );
+
                 break;
         }
 
