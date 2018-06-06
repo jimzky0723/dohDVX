@@ -231,6 +231,7 @@ class ProfileCtrl extends Controller
             $data = array(
                 'unique_id' => $unique_id,
                 'tsekap_id' => '',
+                'list_number' => $req->list_number,
                 'facility_name' => $req->facility_name,
                 'fname' => $req->fname,
                 'mname' => $req->mname,

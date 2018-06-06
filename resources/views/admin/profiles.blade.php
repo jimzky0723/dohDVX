@@ -82,7 +82,7 @@
                                     <td>
                                         <a href="{{ url('admin/profiles/update/'.$row->id).'/'.$requestName }}"><font class="title-info">{{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}</font></a><br />
                                         <small class="text-info">
-                                            {{ $row->barangay }},
+                                            {{ \App\Barangay::find($row->barangay)->description }},
                                             {{ \App\Http\Controllers\ParamCtrl::getMuncityName($row->muncity) }},
                                             {{ \App\Http\Controllers\ParamCtrl::getProvinceName($row->province) }}
                                         </small>
