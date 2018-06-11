@@ -27,7 +27,7 @@
                         <i class="fa fa-file-excel-o"></i> Upload Data
                     </a>
                 </div>
-                Upload Result</h3>
+                Upload Result: {{ $upload_muncity }}</h3>
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-sm-4 col-xs-12">

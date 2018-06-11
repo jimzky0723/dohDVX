@@ -95,7 +95,15 @@
                                     <td>{{ $row->dose_age }}</td>
                                     <td>{{ $row->dose_lot_no }}</td>
                                     <td>{{ $row->dose_batch_no }}</td>
-                                    <td>{{ date('M-Y',strtotime($row->dose_expiration)) }}</td>
+                                    <td>
+                                        <?php $tmp_date = date('M-Y',strtotime($row->dose_expiration)); ?>
+                                        @if($row->dose_expiration==='0000-00-00' || $tmp_date==='Jan-1970')
+                                            <span class="text-danger">Not Set</span>
+                                        @else
+                                            {{ date('M-Y',strtotime($row->dose_expiration)) }}
+                                        @endif
+
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

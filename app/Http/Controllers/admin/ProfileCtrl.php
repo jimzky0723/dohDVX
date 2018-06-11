@@ -52,6 +52,7 @@ class ProfileCtrl extends Controller
         Session::forget('error');
         Session::forget('count_added');
         Session::forget('count_updated');
+        Session::forget('upload_muncity');
 //        Session::push('error','');
 //        Session::push('count_created','');
 //        Session::push('count_updated','');
@@ -71,7 +72,8 @@ class ProfileCtrl extends Controller
             'count_added' => count(Session::get('count_added')),
             'count_updated' => count(Session::get('count_updated')),
             'count_error' => count(Session::get('error')),
-            'error_list' => Session::get('error')
+            'error_list' => Session::get('error'),
+            'upload_muncity' => Session::get('upload_muncity'),
         ]);
     }
 
@@ -136,7 +138,7 @@ class ProfileCtrl extends Controller
                     date('Ymd',strtotime($content[11])),
                     $barangay
                 );
-
+                Session::put('upload_muncity',$content[9]);
                 if($barangay==0 || $muncity==0)
                 {
                     $session = array(
