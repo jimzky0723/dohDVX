@@ -58,3 +58,4 @@ Route::post('importExcel', 'MaatwebsiteController@importExcel');
 Route::match(["GET","POST"],'admin/dengvaxia_list','DengvaxiaController@dengvaxia');
 
 
+Route::post('importExcel', 'MaatwebsiteController@upload2');
