@@ -57,3 +57,4 @@ Route::post('importExcel', 'MaatwebsiteController@importExcel');
 // DENGVAXIA
 Route::match(["GET","POST"],'admin/dengvaxia_list','DengvaxiaController@dengvaxia');
 
+
