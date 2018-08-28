@@ -48,3 +48,12 @@ Route::post('getAge','admin\ProfileCtrl@getStaticAge');
 //API OPO
 Route::match(['GET','POST'],'api','ApiCtrl@api');
 
+Route::get('importExport', 'MaatwebsiteController@importExport');
+// Route for export/download tabledata to .csv, .xls or .xlsx
+Route::get('downloadExcel/{type}', 'MaatwebsiteController@downloadExcel');
+// Route for import excel data to database.
+Route::post('importExcel', 'MaatwebsiteController@importExcel');
+
+// DENGVAXIA
+Route::match(["GET","POST"],'admin/dengvaxia_list','DengvaxiaController@dengvaxia');
+
