@@ -17,7 +17,7 @@ class CreateProfileDengvaxia extends Migration
             return true;
         }
         Schema::create('dengvaxia_profiles', function (Blueprint $table) {
-            $table->increments('id');
+            //$table->increments('id');
             $table->string('identification_number')->nullable();
             $table->string('fac_province')->nullable();
             $table->string('fac_muncity')->nullable();
@@ -62,6 +62,7 @@ class CreateProfileDengvaxia extends Migration
             $table->string('second_dose_reasons_refused')->nullable();
             $table->string('tsekap_id');
             $table->string('status')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

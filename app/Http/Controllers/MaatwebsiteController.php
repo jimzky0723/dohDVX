@@ -20,6 +20,9 @@ class MaatwebsiteController extends Controller
     }
     public function importExcel(Request $request)
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit','1000M');
+        ini_set('max_input_time','300000');
         $path = $request->file('import_file')->getRealPath();
         $excelData = Excel::load($path)->get();
         foreach($excelData as $key => $row){
