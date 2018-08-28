@@ -109,6 +109,7 @@ class MaatwebsiteController extends Controller
     }
 
     public function upload2(Request $request){
+
         $pdo = \DB::connection()->getPdo();
         ini_set('max_execution_time', 0);
         ini_set('memory_limit','1000M');
@@ -157,11 +158,10 @@ class MaatwebsiteController extends Controller
         second_dose_age,
         second_dose_reasons_refused,
         tsekap_id,created_at,updated_at) VALUES";
-
         $path = $request->file('import_file')->getRealPath();
         $excelData = Excel::load($path)->get();
-        foreach($excelData as $key => $row) {
 
+        foreach($excelData as $key => $row) {
             if($bar_que = Barangay::where('description','=',$row->barangay)->first()){
                 $barangay_id = $bar_que->id;
             } else {
@@ -182,7 +182,6 @@ class MaatwebsiteController extends Controller
             } else {
                 $dob = "NO DOB";
             }
-
             if($tsekap_profile = TsekapProfile::where('fname','=',$row->first_name)->where('lname','=',$row->last_name)->where('dob','=',$dob)->first(['id','dengvaxia'])){
                 $tsekap_id = $tsekap_profile->id;
                 $tsekap_profile->update([
@@ -191,54 +190,52 @@ class MaatwebsiteController extends Controller
             } else {
                 $tsekap_id = "";
             }
-
             $query .= "('" .$row->identification_number .",".
-            "','" .$row->fac_province.
-                 "','" .$row->fac_muncity.
-                 "','" .$row->facility_name.
-                 "','" .$row->last_name.
-                 "','" .$row->first_name.
-                 "','" .$row->mi.
+                "','" .$row->fac_province.
+                "','" .$row->fac_muncity.
+                "','" .$row->facility_name.
+                "','" .$row->last_name.
+                "','" .$row->first_name.
+                "','" .$row->mi.
                 "','" .$row->house_stsitiopurok.
                 "','" .$barangay_id.
                 "','" .$municipality_id.
-                 "','" .$province_id.
-                 "','" .$row->barangay.
+                "','" .$province_id.
+                "','" .$row->barangay.
                 "','" .$row->muncity.
-                 "','" .$row->province.
+                "','" .$row->province.
                 "','" .$row->date_of_birth_mmddyyyy.
-                 "','" .$row->age.
-                 "','" .$row->sex_male_female.
-                 "','" .$row->first_dose_screened_yesno.
+                "','" .$row->age.
+                "','" .$row->sex_male_female.
+                "','" .$row->first_dose_screened_yesno.
                 "','" .$row->first_dose_date_given.
-                 "','" .$row->first_dose_age.
-                 "','" .$row->validationwithin_the_range_9_14yo.
+                "','" .$row->first_dose_age.
+                "','" .$row->validationwithin_the_range_9_14yo.
                 "','" .$row->one_def.
                 "','" .$row->two_def.
                 "','" . $row->three_def.
-               "','" .  $row->four_def.
+                "','" .  $row->four_def.
                 "','" .$row->five_def.
-               "','" .  $row->six_def.
-               "','" .  $row->seven_def.
+                "','" .  $row->six_def.
+                "','" .  $row->seven_def.
                 "','" . $row->eight_def.
                 "','" . $row->nine_def.
                 "','" . $row->ten_def.
                 "','" . $row->eleven_def.
-               "','" .  $row->twelve_def.
-               "','" . $row->first_dose_lot.
-               "','" .  $row->first_dose_batch_no.
-               "','" .  $row->first_dose_expiration_mmddyy.
-               "','" .  $row->first_dose_aefi_yesno.
-               "','" . $row->remarks.
+                "','" .  $row->twelve_def.
+                "','" . $row->first_dose_lot.
+                "','" .  $row->first_dose_batch_no.
+                "','" .  $row->first_dose_expiration_mmddyy.
+                "','" .  $row->first_dose_aefi_yesno.
+                "','" . $row->remarks.
                 "','" . $row->second_dose_screened_yesno.
                 "','" . $row->second_dose_date_given.
-               "','" .  $row->second_dose_age.
+                "','" .  $row->second_dose_age.
                 "','" . $row->second_dose_reasons_of_refused.
-               "','" .  $tsekap_id . "',NOW(),NOW()),";
+                "','" .  $tsekap_id . "',NOW(),NOW()),";
         }
 
         $query .= "('','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',NOW(),NOW())";
-
         $st = $pdo->prepare($query);
         $st->execute();
 
