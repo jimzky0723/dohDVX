@@ -17,7 +17,7 @@ class CreateProfileDengvaxia extends Migration
             return true;
         }
         Schema::create('dengvaxia_profiles', function (Blueprint $table) {
-            //$table->increments('id');
+            $table->increments('id');
             $table->string('identification_number')->nullable();
             $table->string('fac_province')->nullable();
             $table->string('fac_muncity')->nullable();
