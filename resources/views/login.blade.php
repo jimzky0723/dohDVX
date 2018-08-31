@@ -73,7 +73,7 @@
             $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
         });
 
-        $('.form-submit').submit(function(e){
+        $('.forms-submit').submit(function(e){
              e.preventDefault();
              var username = $(this).find(':input#username').val();
              var password = $(this).find(':input#password').val();

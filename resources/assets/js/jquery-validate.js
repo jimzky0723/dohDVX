@@ -29,7 +29,7 @@
                 return;
             }
 
-            // Check if a validator for this form was already created
+            // Check if a validator for this forms was already created
             var validator = $.data( this[ 0 ], "validator" );
             if ( validator ) {
                 return validator;
@@ -59,11 +59,11 @@
                     }
                 } );
 
-                // Validate the form on submit
+                // Validate the forms on submit
                 this.on( "submit.validate", function( event ) {
                     if ( validator.settings.debug ) {
 
-                        // Prevent form submit to be able to see console output
+                        // Prevent forms submit to be able to see console output
                         event.preventDefault();
                     }
                     function handle() {
@@ -419,7 +419,7 @@
                     .on( "click.validate", "select, option, [type='radio'], [type='checkbox']", delegate );
 
                 if ( this.settings.invalidHandler ) {
-                    $( this.currentForm ).on( "invalid-form.validate", this.settings.invalidHandler );
+                    $( this.currentForm ).on( "invalid-forms.validate", this.settings.invalidHandler );
                 }
 
                 // Add aria-required to any Static/Data/Class required fields before first validation
@@ -433,7 +433,7 @@
                 $.extend( this.submitted, this.errorMap );
                 this.invalid = $.extend( {}, this.errorMap );
                 if ( !this.valid() ) {
-                    $( this.currentForm ).triggerHandler( "invalid-form", [ this ] );
+                    $( this.currentForm ).triggerHandler( "invalid-forms", [ this ] );
                 }
                 this.showErrors();
                 return this.valid();
@@ -616,7 +616,7 @@
                 var validator = this,
                     rulesCache = {};
 
-                // Select all valid inputs inside the form (no submit or reset buttons)
+                // Select all valid inputs inside the forms (no submit or reset buttons)
                 return $( this.currentForm )
                     .find( "input, select, textarea, [contenteditable]" )
                     .not( ":submit, :reset, :image, :disabled" )
@@ -627,9 +627,9 @@
                             console.error( "%o has no name assigned", this );
                         }
 
-                        // Set form expando on contenteditable
+                        // Set forms expando on contenteditable
                         if ( this.hasAttribute( "contenteditable" ) ) {
-                            this.form = $( this ).closest( "form" )[ 0 ];
+                            this.form = $( this ).closest( "forms" )[ 0 ];
                         }
 
                         // Select only the first element for each name, and only those with rules specified
@@ -1073,7 +1073,7 @@
                     $( this.currentForm ).submit();
                     this.formSubmitted = false;
                 } else if ( !valid && this.pendingRequest === 0 && this.formSubmitted ) {
-                    $( this.currentForm ).triggerHandler( "invalid-form", [ this ] );
+                    $( this.currentForm ).triggerHandler( "invalid-forms", [ this ] );
                     this.formSubmitted = false;
                 }
             },

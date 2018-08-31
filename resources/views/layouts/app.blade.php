@@ -60,7 +60,7 @@
 
 <nav class="navbar navbar-default navbar-static-top">
     <div class="header" style="background-color:#2F4054;padding:10px;">
-        <div class="container">
+        <div>
             <div class="pull-left">
                 <?php
                     $user = Session::get('auth');
@@ -90,15 +90,35 @@
             <a class="navbar-brand" href="#"></a>
         </div>
 
-        @if($user->level=='admin')
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="{{ url('admin/dengvaxia_list') }}"><i class="fa fa-sticky-note"></i> Dengvaxia</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sticky-note"></i> Dengvaxia <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @foreach(\App\Province::get() as $pro)
+                            <li class="dropdown-submenu">
+                                <a href="#" data-toggle="dropdown"><i class="fa fa-file"></i> {{ $pro->description }}</a>
+                                <ul class="dropdown-menu">
+                                    @foreach(\App\Muncity::where('province_id','=',$pro->id)->get() as $mun)
+                                        <li><a href="{{ url('admin/dengvaxia_list'.'/'.$mun->id) }}"><i class="fa fa-sticky-note"></i> {{ $mun->description }}</a></li>
+                                        <li class="divider"></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="divider"></li>
+                        @endforeach
+                        <li><a href="{{ url('admin/dengvaxia_list'.'/'.'all') }}"><i class="fa fa-sticky-note"></i> ALL</a></li>
+                        <li class="divider"></li>
+                    </ul>
+                </li>
+                <!--
                 <li><a href="{{ url('admin/profiles/profiles') }}"><i class="fa fa-wheelchair"></i> Profiles</a></li>
                 <li><a href="{{ url('admin/profiles/pending') }}"><i class="fa fa-exclamation"></i> Pending</a></li>
                 <li><a href="{{ url('admin/hospital') }}"><i class="fa fa-building"></i> Hospitals</a></li>
                 <li><a href="{{ url('admin/report') }}"><i class="fa fa-line-chart"></i> Reports</a></li>
+                <li><a href="{{ url('forms') }}"><i class="fa fa-folder"></i> Forms</a></li>
+                -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -109,9 +129,7 @@
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
-        @else
 
-        @endif
     </div>
 </nav>
 
@@ -122,7 +140,7 @@
 </div> <!-- /container -->
 <footer class="footer">
     <div class="container">
-        <p>All Rights Reserved 2017 | Version 1.0</p>
+        <p>All Rights Reserved 2018 | Version 1.0</p>
     </div>
 </footer>
 @include('modal')

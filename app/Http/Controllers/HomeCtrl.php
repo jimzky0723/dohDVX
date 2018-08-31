@@ -15,8 +15,8 @@ class HomeCtrl extends Controller
     public function index()
     {
         $user = Session::get('auth');
-        if($user->level=='admin'){
-            return redirect($user->level);
+        if($user->level=='admin' || $user->level=='user'){
+            return redirect('admin');
         }else if($user->level=='hospital'){
             return redirect($user->level);
         }

@@ -18,6 +18,7 @@ Route::get('/logout', function (){
     return redirect('login');
 });
 Route::get('/login', 'LoginCtrl@login');
+//Auth::routes();
 Route::post('/login', 'LoginCtrl@validateLogin');
 
 
@@ -52,10 +53,19 @@ Route::get('importExport', 'MaatwebsiteController@importExport');
 // Route for export/download tabledata to .csv, .xls or .xlsx
 Route::get('downloadExcel/{type}', 'MaatwebsiteController@downloadExcel');
 // Route for import excel data to database.
-Route::post('importExcel', 'MaatwebsiteController@importExcel');
+Route::post('importExcel/{municipality}', 'MaatwebsiteController@importExcel');
 
 // DENGVAXIA
-Route::match(["GET","POST"],'admin/dengvaxia_list','DengvaxiaController@dengvaxia');
+Route::match(["GET","POST"],'admin/dengvaxia_list/{muncity}','DengvaxiaController@dengvaxia');
+Route::post('delete_dengvaxia','DengvaxiaController@delete_dengvaxia');
 
 
-Route::post('importExcel', 'MaatwebsiteController@upload2');
+//Route::post('importExcel/{municipality}', 'MaatwebsiteController@upload2');
+
+Route::get('add_user',function(){
+    \DB::table('users')->insert([
+        'username' => 'user',
+        'password' => bcrypt('secret'),
+        'level' => 'user',
+    ]);
+});

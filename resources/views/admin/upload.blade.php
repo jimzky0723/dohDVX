@@ -71,10 +71,10 @@
             file.trigger('click');
         });
         $(document).on('change', '.file', function(){
-            $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+            $(this).parent().find('.forms-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
         });
 
-        $('.form-submit').submit(function(e){
+        $('.forms-submit').submit(function(e){
             e.preventDefault();
 
             $('.progress-bar').addClass('progress-bar-animated');

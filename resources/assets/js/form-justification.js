@@ -60,12 +60,12 @@
                 '<div class="row"> ' +
                 '<br />' +
                 '<span class="col-md-4"> ' +
-                '<span class="form-group"> ' +
-                '<input type="text" name="name_to[]" class="form-control" id="to-name-' + to_name + '"/> ' +
+                '<span class="forms-group"> ' +
+                '<input type="text" name="name_to[]" class="forms-control" id="to-name-' + to_name + '"/> ' +
                 '</span>' +
                 '</span> ' +
                 '<span class="col-md-4"> ' +
-                '<input type="text" name="desig_to[]" class="form-control" id="to-des-' + to_des + '"/> ' +
+                '<input type="text" name="desig_to[]" class="forms-control" id="to-des-' + to_des + '"/> ' +
                 '</span> ' +
                 '<span class="col-md-1"> ' +
                 '<a href="#" style="color:#5cb85c;" onclick="add_to_field(this);"> <span class="glyphicon glyphicon-plus"  aria-hidden="true"></span></a>' +
@@ -89,12 +89,12 @@
             '<div class="row"> ' +
             '<br />' +
             '<span class="col-md-4"> ' +
-            '<span class="form-group"> ' +
-            '<input type="text" name="name_to[]" class="form-control" id="to-name-' + to_name + '"/> ' +
+            '<span class="forms-group"> ' +
+            '<input type="text" name="name_to[]" class="forms-control" id="to-name-' + to_name + '"/> ' +
             '</span>' +
             '</span> ' +
             '<span class="col-md-4"> ' +
-            '<input type="text" name="desig_to[]" class="form-control" id="to-des-' + to_des + '"/> ' +
+            '<input type="text" name="desig_to[]" class="forms-control" id="to-des-' + to_des + '"/> ' +
             '</span> ' +
             '<span class="col-md-1"> ' +
             '<a href="#" style="color:#5cb85c;" onclick="add_to_field(this);"> <span class="glyphicon glyphicon-plus"  aria-hidden="true"></span></a>' +

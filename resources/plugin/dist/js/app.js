@@ -564,7 +564,7 @@ function _init() {
       //Find the box parent
       var box = element.parents(".box").first();
       //Find the body and the footer
-      var box_content = box.find("> .box-body, > .box-footer, > form  >.box-body, > form > .box-footer");
+      var box_content = box.find("> .box-body, > .box-footer, > forms  >.box-body, > forms > .box-footer");
       if (!box.hasClass("collapsed-box")) {
         //Convert minus into plus
         element.children(":first")

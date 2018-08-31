@@ -337,7 +337,7 @@
         });
     }
 
-    $("form").submit(function(){
+    $("forms").submit(function(){
         if( $("#validation").val() == '' ){
             alert('Please validate first');
             return false;

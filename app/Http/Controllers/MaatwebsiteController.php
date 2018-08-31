@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Excel;
 use App\TsekapProfile;
+use Mockery\Exception;
 
 class MaatwebsiteController extends Controller
 {
@@ -18,8 +19,9 @@ class MaatwebsiteController extends Controller
     {
         return view('admin/importExport');
     }
-    public function importExcel(Request $request)
+    public function importExcel(Request $request,$municipality)
     {
+        $date_now =  date('Y-m-d H:i:s');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit','1000M');
         ini_set('max_input_time','300000');
@@ -31,11 +33,8 @@ class MaatwebsiteController extends Controller
             } else {
                 $barangay_id = "NO ID";
             }
-            if($mun_que = Muncity::where('description','=',$row->muncity)->first()){
-                $municipality_id = $mun_que->id;
-            } else {
-                $municipality_id = "NO ID";
-            }
+
+
             if($pro_que = Province::where('description','=',$row->province)->first()){
                 $province_id = $pro_que->id;
             } else {
@@ -65,7 +64,7 @@ class MaatwebsiteController extends Controller
                 'mname' => $row->mi,
                 'house_number' => $row->house_stsitiopurok,
                 'barangay_id' => $barangay_id,
-                'muncity_id' => $municipality_id,
+                'muncity_id' => '73',
                 'province_id' => $province_id,
                 'barangay' => $row->barangay,
                 'muncity' => $row->muncity,
@@ -98,17 +97,20 @@ class MaatwebsiteController extends Controller
                 'second_dose_date_given' => $row->second_dose_date_given,
                 'second_dose_age' => $row->second_dose_age,
                 'second_dose_reasons_refused' => $row->second_dose_reasons_of_refused,
-                'tsekap_id' => $tsekap_id
+                'tsekap_id' => $tsekap_id,
+                'status' => '1',
+                'created_at' => $date_now,
+                'updated_at' => $date_now
             ];
         }
 
         Dengvaxia::insert($excelInsert);
 
-        Session::put('uploadCount',count($excelInsert));
-        return redirect('admin/dengvaxia_list');
+        Session::flash('uploadCount',count($excelInsert).' dengvaxia patient successfully uploaded!');
+        return redirect('admin/dengvaxia_list'.'/'.$municipality);
     }
 
-    public function upload2(Request $request){
+    public function upload2(Request $request,$municipality){
 
         $pdo = \DB::connection()->getPdo();
         ini_set('max_execution_time', 0);
@@ -157,7 +159,11 @@ class MaatwebsiteController extends Controller
         second_dose_date_given,
         second_dose_age,
         second_dose_reasons_refused,
-        tsekap_id,created_at,updated_at) VALUES";
+        tsekap_id,
+        status,
+        created_at,
+        updated_at) VALUES";
+
         $path = $request->file('import_file')->getRealPath();
         $excelData = Excel::load($path)->get();
 
@@ -167,11 +173,7 @@ class MaatwebsiteController extends Controller
             } else {
                 $barangay_id = "NO ID";
             }
-            if($mun_que = Muncity::where('description','=',$row->muncity)->first()){
-                $municipality_id = $mun_que->id;
-            } else {
-                $municipality_id = "NO ID";
-            }
+
             if($pro_que = Province::where('description','=',$row->province)->first()){
                 $province_id = $pro_que->id;
             } else {
@@ -190,7 +192,7 @@ class MaatwebsiteController extends Controller
             } else {
                 $tsekap_id = "";
             }
-            $query .= "('" .$row->identification_number .",".
+            $query .= "('" .$row->identification_number .
                 "','" .$row->fac_province.
                 "','" .$row->fac_muncity.
                 "','" .$row->facility_name.
@@ -199,7 +201,7 @@ class MaatwebsiteController extends Controller
                 "','" .$row->mi.
                 "','" .$row->house_stsitiopurok.
                 "','" .$barangay_id.
-                "','" .$municipality_id.
+                "','" .'72'.
                 "','" .$province_id.
                 "','" .$row->barangay.
                 "','" .$row->muncity.
@@ -213,31 +215,35 @@ class MaatwebsiteController extends Controller
                 "','" .$row->validationwithin_the_range_9_14yo.
                 "','" .$row->one_def.
                 "','" .$row->two_def.
-                "','" . $row->three_def.
-                "','" .  $row->four_def.
+                "','" .$row->three_def.
+                "','" .$row->four_def.
                 "','" .$row->five_def.
-                "','" .  $row->six_def.
-                "','" .  $row->seven_def.
-                "','" . $row->eight_def.
-                "','" . $row->nine_def.
-                "','" . $row->ten_def.
-                "','" . $row->eleven_def.
-                "','" .  $row->twelve_def.
-                "','" . $row->first_dose_lot.
-                "','" .  $row->first_dose_batch_no.
-                "','" .  $row->first_dose_expiration_mmddyy.
-                "','" .  $row->first_dose_aefi_yesno.
-                "','" . $row->remarks.
-                "','" . $row->second_dose_screened_yesno.
-                "','" . $row->second_dose_date_given.
-                "','" .  $row->second_dose_age.
-                "','" . $row->second_dose_reasons_of_refused.
-                "','" .  $tsekap_id . "',NOW(),NOW()),";
+                "','" .$row->six_def.
+                "','" .$row->seven_def.
+                "','" .$row->eight_def.
+                "','" .$row->nine_def.
+                "','" .$row->ten_def.
+                "','" .$row->eleven_def.
+                "','" .$row->twelve_def.
+                "','" .$row->first_dose_lot.
+                "','" .$row->first_dose_batch_no.
+                "','" .$row->first_dose_expiration_mmddyy.
+                "','" .$row->first_dose_aefi_yesno.
+                "','" .$row->remarks.
+                "','" .$row->second_dose_screened_yesno.
+                "','" .$row->second_dose_date_given.
+                "','" .$row->second_dose_age.
+                "','" .$row->second_dose_reasons_of_refused.
+                "','" .$tsekap_id .
+                "','" .'1' ."',NOW(),NOW()),";
         }
 
-        $query .= "('','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',NOW(),NOW())";
+        $query .= "('','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',NOW(),NOW())";
         $st = $pdo->prepare($query);
         $st->execute();
+
+        Session::flash('uploadCount', count($excelData).' dengvaxia patient successfully uploaded!');
+        return redirect('admin/dengvaxia_list'.'/'.$municipality);
 
     }
 }

@@ -4,7 +4,7 @@
 * Copyright (c) 2013 Vitaliy Potapov; Licensed MIT */
 /**
 Form with single input element, two buttons and two states: normal/loading.
-Applied as jQuery method to DIV tag (not to form tag!). This is because form can be in loading state when spinner shown.
+Applied as jQuery method to DIV tag (not to forms tag!). This is because forms can be in loading state when spinner shown.
 Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 
 @class editableform
@@ -16,7 +16,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     
     var EditableForm = function (div, options) {
         this.options = $.extend({}, $.fn.editableform.defaults, options);
-        this.$div = $(div); //div, containing form. Not form tag. Not editable-element.
+        this.$div = $(div); //div, containing forms. Not forms tag. Not editable-element.
         if(!this.options.scope) {
             this.options.scope = this;
         }
@@ -56,7 +56,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
             this.$loading = $($.fn.editableform.loading);        
             this.$div.empty().append(this.$loading);
             
-            //init form template and buttons
+            //init forms template and buttons
             this.initTemplate();
             if(this.options.showbuttons) {
                 this.initButtons();
@@ -67,8 +67,8 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
             //show loading state
             this.showLoading();            
             
-            //flag showing is form now saving value to server. 
-            //It is needed to wait when closing form.
+            //flag showing is forms now saving value to server.
+            //It is needed to wait when closing forms.
             this.isSaving = false;
             
             /**        
@@ -81,10 +81,10 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
             //init input
             this.initInput();
             
-            //append input to form
+            //append input to forms
             this.$form.find('div.editable-input').append(this.input.$tpl);            
             
-            //append form to container
+            //append forms to container
             this.$div.append(this.$form);
             
             //render input
@@ -102,7 +102,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                     this.error(this.input.error);
                     this.$form.find('.editable-submit').attr('disabled', true);
                     this.input.$input.attr('disabled', true);
-                    //prevent form from submitting
+                    //prevent forms from submitting
                     this.$form.submit(function(e){ e.preventDefault(); });
                 } else {
                     this.error(false);
@@ -115,7 +115,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 }
 
                 /**        
-                Fired when form is rendered
+                Fired when forms is rendered
                 @event rendered
                 @param {Object} event event object
                 **/            
@@ -123,7 +123,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 
                 this.showForm();
                 
-                //call postrender method to perform actions required visibility of form
+                //call postrender method to perform actions required visibility of forms
                 if(this.input.postrender) {
                     this.input.postrender();
                 }                
@@ -131,7 +131,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         },
         cancel: function() {   
             /**        
-            Fired when form was cancelled by user
+            Fired when forms was cancelled by user
             @event cancel 
             @param {Object} event event object
             **/              
@@ -140,7 +140,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         showLoading: function() {
             var w, h;
             if(this.$form) {
-                //set loading size equal to form
+                //set loading size equal to forms
                 w = this.$form.outerWidth();
                 h = this.$form.outerHeight(); 
                 if(w) {
@@ -167,7 +167,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 this.input.activate(); 
             }
             /**        
-            Fired when form is shown
+            Fired when forms is shown
             @event show 
             @param {Object} event event object
             **/                    
@@ -225,7 +225,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
             if (!this.options.savenochange && this.input.value2str(newValue) == this.input.value2str(this.value)) {
             /*jslint eqeq: false*/                
                 /**        
-                Fired when value not changed but form is submitted. Requires savenochange = false.
+                Fired when value not changed but forms is submitted. Requires savenochange = false.
                 @event nochange 
                 @param {Object} event event object
                 **/                    
@@ -246,14 +246,14 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 //run success callback
                 var res = typeof this.options.success === 'function' ? this.options.success.call(this.options.scope, response, newValue) : null;
 
-                //if success callback returns false --> keep form open and do not activate input
+                //if success callback returns false --> keep forms open and do not activate input
                 if(res === false) {
                     this.error(false);
                     this.showForm(false);
                     return;
                 }
 
-                //if success callback returns string -->  keep form open, show error and activate input               
+                //if success callback returns string -->  keep forms open, show error and activate input
                 if(typeof res === 'string') {
                     this.error(res);
                     this.showForm();
@@ -270,7 +270,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 this.error(false);   
                 this.value = newValue;
                 /**        
-                Fired when form is submitted
+                Fired when forms is submitted
                 @event save 
                 @param {Object} event event object
                 @param {Object} params additional params
@@ -279,7 +279,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 @param {Object} params.response ajax response
 
                 @example
-                $('#form-div').on('save'), function(e, params){
+                $('#forms-div').on('save'), function(e, params){
                     if(params.newValue === 'username') {...}
                 });
                 **/
@@ -373,7 +373,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                 this.value = value;
             }
             
-            //if form is visible, update input
+            //if forms is visible, update input
             if(this.$form && this.$form.is(':visible')) {
                 this.input.value2input(this.value);
             }            
@@ -386,15 +386,15 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     @method $().editableform(options)
     @params {Object} options
     @example
-    var $form = $('&lt;div&gt;').editableform({
+    var $forms = $('&lt;div&gt;').editableform({
         type: 'text',
         name: 'username',
         url: '/post',
         value: 'vitaliy'
     });
 
-    //to display form you should call 'render' method
-    $form.editableform('render');     
+    //to display forms you should call 'render' method
+    $forms.editableform('render');
     */
     $.fn.editableform = function (option) {
         var args = arguments;
@@ -600,7 +600,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         **/            
         scope: null,
         /**
-        Whether to save or cancel value when it was not changed but form was submitted
+        Whether to save or cancel value when it was not changed but forms was submitted
 
         @property savenochange 
         @type boolean
@@ -614,12 +614,12 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     Note: following params could redefined in engine: bootstrap or jqueryui:
     Classes 'control-group' and 'editable-error-block' must always present!
     */      
-    $.fn.editableform.template = '<form class="form-inline editableform">'+
+    $.fn.editableform.template = '<forms class="forms-inline editableform">'+
     '<div class="control-group">' + 
     '<div><div class="editable-input"></div><div class="editable-buttons"></div></div>'+
     '<div class="editable-error-block"></div>' + 
     '</div>' + 
-    '</form>';
+    '</forms>';
 
     //loading div
     $.fn.editableform.loading = '<div class="editableform-loading"></div>';
@@ -852,7 +852,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                type = 'textarea';
            }
 
-           //create input of specified type. Input will be used for converting value, not in form
+           //create input of specified type. Input will be used for converting value, not in forms
            if(typeof $.fn.editabletypes[type] === 'function') {
                TypeConstructor = $.fn.editabletypes[type];
                typeOptions = this.sliceObj(options, this.objectKeys(TypeConstructor.defaults));
@@ -889,7 +889,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 }(window.jQuery));
 
 /**
-Attaches stand-alone container with editable-form to HTML element. Element is used only for positioning, value is not stored anywhere.<br>
+Attaches stand-alone container with editable-forms to HTML element. Element is used only for positioning, value is not stored anywhere.<br>
 This method applied internally in <code>$().editable()</code>. You should subscribe on it's events (save / cancel) to get profit of it.<br>
 Final realization can be different: bootstrap-popover, jqueryui-tooltip, poshytip, inline-div. It depends on which js file you include.<br>
 Applied as jQuery method.
@@ -922,7 +922,7 @@ Applied as jQuery method.
             this.options = $.extend({}, $.fn.editableContainer.defaults, options);         
             this.splitOptions();
             
-            //set scope of form callbacks to element
+            //set scope of forms callbacks to element
             this.formOptions.scope = this.$element[0]; 
             
             this.initContainer();
@@ -993,7 +993,7 @@ Applied as jQuery method.
                 throw new Error(this.containerName + ' not found. Have you included corresponding js file?');   
             }
             
-            //keys defined in container defaults go to container, others go to form
+            //keys defined in container defaults go to container, others go to forms
             for(var k in this.options) {
               if(k in this.defaults) {
                  this.containerOptions[k] = this.options[k];
@@ -1048,12 +1048,12 @@ Applied as jQuery method.
                     } else {
                         this.setPosition();
                     }
-                }, this), //re-position container every time form is shown (occurs each time after loading state)
+                }, this), //re-position container every time forms is shown (occurs each time after loading state)
                 rendering: $.proxy(this.setPosition, this), //this allows to place container correctly when loading shown
-                resize: $.proxy(this.setPosition, this), //this allows to re-position container when form size is changed 
+                resize: $.proxy(this.setPosition, this), //this allows to re-position container when forms size is changed
                 rendered: $.proxy(function(){
                     /**        
-                    Fired when container is shown and form is rendered (for select will wait for loading dropdown options).  
+                    Fired when container is shown and forms is rendered (for select will wait for loading dropdown options).
                     **Note:** Bootstrap popover has own `shown` event that now cannot be separated from x-editable's one.
                     The workaround is to check `arguments.length` that is always `2` for x-editable.                     
                     
@@ -1074,7 +1074,7 @@ Applied as jQuery method.
         },        
 
         /**
-        Shows container with form
+        Shows container with forms
         @method show()
         @param {boolean} closeAll Whether to close all other editable containers when showing this one. Default true.
         **/
@@ -1091,23 +1091,23 @@ Applied as jQuery method.
             this.tip().addClass(this.containerClass);
 
             /*
-            Currently, form is re-rendered on every show. 
+            Currently, forms is re-rendered on every show.
             The main reason is that we dont know, what will container do with content when closed:
             remove(), detach() or just hide() - it depends on container.
             
-            Detaching form itself before hide and re-insert before show is good solution, 
+            Detaching forms itself before hide and re-insert before show is good solution,
             but visually it looks ugly --> container changes size before hide.  
             */             
             
-            //if form already exist - delete previous data 
+            //if forms already exist - delete previous data
             if(this.$form) {
                 //todo: destroy prev data!
-                //this.$form.destroy();
+                //this.$forms.destroy();
             }
 
             this.$form = $('<div>');
             
-            //insert form into container body
+            //insert forms into container body
             if(this.tip().is(this.innerCss)) {
                 //for inline container
                 this.tip().append(this.$form); 
@@ -1115,12 +1115,12 @@ Applied as jQuery method.
                 this.tip().find(this.innerCss).append(this.$form);
             } 
             
-            //render form
+            //render forms
             this.renderForm();
         },
 
         /**
-        Hides container with form
+        Hides container with forms
         @method hide()
         @param {string} reason Reason caused hiding. Can be <code>save|cancel|onblur|nochange|undefined (=manual)</code>
         **/         
@@ -1129,7 +1129,7 @@ Applied as jQuery method.
                 return;
             }
             
-            //if form is saving value, schedule hide
+            //if forms is saving value, schedule hide
             if(this.$form.data('editableform').isSaving) {
                 this.delayedHide = {reason: reason};
                 return;    
@@ -1335,7 +1335,7 @@ Applied as jQuery method.
     //defaults
     $.fn.editableContainer.defaults = {
         /**
-        Initial value of form input
+        Initial value of forms input
 
         @property value 
         @type mixed
@@ -1429,7 +1429,7 @@ Applied as jQuery method.
         },
         
         splitOptions: function() {
-            //all options are passed to form
+            //all options are passed to forms
             this.containerOptions = {};
             this.formOptions = this.options;
         },
@@ -1719,7 +1719,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
                 this.container.option(key, value);  
             }
              
-            //pass option to input directly (as it points to the same in form)
+            //pass option to input directly (as it points to the same in forms)
             if(this.input.option) {
                 this.input.option(key, value);
             }
@@ -1775,7 +1775,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         },        
         
         /**
-        Shows container with form
+        Shows container with forms
         @method show()
         @param {boolean} closeAll Whether to close all other editable containers when showing this one. Default true.
         **/  
@@ -1788,7 +1788,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
             if(!this.container) {
                 var containerOptions = $.extend({}, this.options, {
                     value: this.value,
-                    input: this.input //pass input to form (as it is already created)
+                    input: this.input //pass input to forms (as it is already created)
                 });
                 this.$element.editableContainer(containerOptions);
                 //listen `save` event 
@@ -1803,7 +1803,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         },
         
         /**
-        Hides container with form
+        Hides container with forms
         @method hide()
         **/       
         hide: function () {   
@@ -1826,7 +1826,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         },
         
         /*
-        * called when form was submitted
+        * called when forms was submitted
         */          
         save: function(e, params) {
             //mark element with unsaved class if needed
@@ -2465,7 +2465,7 @@ To create your own input you can inherit from this class.
        },
        
        /**
-        attach handler to automatically submit form when value changed (useful when buttons not shown)
+        attach handler to automatically submit forms when value changed (useful when buttons not shown)
        **/
        autosubmit: function() {
         
@@ -2946,7 +2946,7 @@ $(function(){
             /*
             //now `clear` is positioned via css
             if(this.$clear) {
-                //can position clear button only here, when form is shown and height can be calculated
+                //can position clear button only here, when forms is shown and height can be calculated
 //                var h = this.$input.outerHeight(true) || 20,
                 var h = this.$clear.parent().height(),
                     delta = (h - this.$clear.height()) / 2;
@@ -3045,7 +3045,7 @@ $(function(){
             //ctrl + enter
             this.$input.keydown(function (e) {
                 if (e.ctrlKey && e.which === 13) {
-                    $(this).closest('form').submit();
+                    $(this).closest('forms').submit();
                 }
             });
         },
@@ -3182,7 +3182,7 @@ $(function(){
             //enter submit
             this.$input.on('keydown.editable', function (e) {
                 if (e.which === 13) {
-                    $(this).closest('form').submit();
+                    $(this).closest('forms').submit();
                 }
             });            
         },
@@ -3201,7 +3201,7 @@ $(function(){
         
         autosubmit: function() {
             this.$input.off('keydown.editable').on('change.editable', function(){
-                $(this).closest('form').submit();
+                $(this).closest('forms').submit();
             });
         }
     });      
@@ -3341,7 +3341,7 @@ $(function(){
        autosubmit: function() {
            this.$input.on('keydown', function(e){
                if (e.which === 13) {
-                   $(this).closest('form').submit();
+                   $(this).closest('forms').submit();
                }
            });
        }
@@ -3517,7 +3517,7 @@ Number
                 //increase right ffset  for up/down arrows
                 this.$clear.css({right: 24});
                 /*
-                //can position clear button only here, when form is shown and height can be calculated
+                //can position clear button only here, when forms is shown and height can be calculated
                 var h = this.$input.outerHeight(true) || 20,
                     delta = (h - this.$clear.height()) / 2;
                 
@@ -3759,7 +3759,7 @@ $(function(){
             //trigger resize of editableform to re-position container in multi-valued mode
             if(this.isMultiple) {
                this.$input.on('change', function() {
-                   $(this).closest('form').parent().triggerHandler('resize');
+                   $(this).closest('forms').parent().triggerHandler('resize');
                });
             }
        },
@@ -3864,7 +3864,7 @@ $(function(){
         autosubmit: function() {
             this.$input.on('change', function(e, isInitial){
                 if(!isInitial) {
-                  $(this).closest('form').submit();
+                  $(this).closest('forms').submit();
                 }
             });
         },
@@ -4497,7 +4497,7 @@ $(function(){
             this.$input.combodate(this.options.combodate);
                     
             if($.fn.editableform.engine === 'bs3') {
-                this.$input.siblings().find('select').addClass('form-control');
+                this.$input.siblings().find('select').addClass('forms-control');
             }
             
             if(this.options.inputclass) {
@@ -4639,7 +4639,7 @@ Editableform based on Twitter Bootstrap 3
     $.extend($.fn.editableform.Constructor.prototype, {
         initTemplate: function() {
             this.$form = $($.fn.editableform.template); 
-            this.$form.find('.control-group').addClass('form-group');
+            this.$form.find('.control-group').addClass('forms-group');
             this.$form.find('.editable-error-block').addClass('help-block');
         },
         initInput: function() {  
@@ -4649,10 +4649,10 @@ Editableform based on Twitter Bootstrap 3
             var emptyInputClass = this.input.options.inputclass === null || this.input.options.inputclass === false;
             var defaultClass = 'input-sm';
             
-            //bs3 add `form-control` class to standard inputs
+            //bs3 add `forms-control` class to standard inputs
             var stdtypes = 'text,select,textarea,password,email,url,tel,number,range,time,typeaheadjs'.split(','); 
             if(~$.inArray(this.input.type, stdtypes)) {
-                this.input.$input.addClass('form-control');
+                this.input.$input.addClass('forms-control');
                 if(emptyInputClass) {
                     this.input.options.inputclass = defaultClass;
                     this.input.$input.addClass(defaultClass);
@@ -6303,7 +6303,7 @@ $(function(){
                 if($(e.currentTarget).is('.old') || $(e.currentTarget).is('.new')) {
                     return;
                 }
-                var $form = $(this).closest('form');
+                var $form = $(this).closest('forms');
                 setTimeout(function() {
                     $form.submit();
                 }, 200);
@@ -6311,9 +6311,9 @@ $(function(){
            //changedate is not suitable as it triggered when showing datepicker. see #149
            /*
            this.$input.on('changeDate', function(e){
-               var $form = $(this).closest('form');
+               var $forms = $(this).closest('forms');
                setTimeout(function() {
-                   $form.submit();
+                   $forms.submit();
                }, 200);
            });
            */
@@ -6559,8 +6559,8 @@ $(function(){
             //adjust container position when viewMode changes
             //see https://github.com/smalot/bootstrap-datetimepicker/pull/80
             this.$input.on('changeMode', function(e) {
-                var f = $(this).closest('form').parent();
-                //timeout here, otherwise container changes position before form has new size
+                var f = $(this).closest('forms').parent();
+                //timeout here, otherwise container changes position before forms has new size
                 setTimeout(function(){
                     f.triggerHandler('resize');
                 }, 0);
@@ -6634,7 +6634,7 @@ $(function(){
 
        autosubmit: function() {
            this.$input.on('mouseup', '.minute', function(e){
-               var $form = $(this).closest('form');
+               var $form = $(this).closest('forms');
                setTimeout(function() {
                    $form.submit();
                }, 200);

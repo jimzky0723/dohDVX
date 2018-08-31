@@ -34,7 +34,8 @@ class LoginCtrl extends Controller
                 if(Hash::check($req->password,$login->password))
                 {
                     Session::put('auth',$login);
-                    if($login->level=='admin'){
+                    return redirect('admin');
+                    if($login->level=='admin' || $login->level=='user'){
                         return 'admin';
                     }else if($login->level=='hospital'){
                         return 'hospital';
@@ -45,11 +46,15 @@ class LoginCtrl extends Controller
                 }
                 else
                 {
-                    return 'error';
+                    Session::flash('username',$req->username);
+                    return redirect('/login');
+                    //return 'error';
                 }
             }
         }else{
-            return 'error';
+            Session::flash('username',$req->username);
+            return redirect('/login');
+            //return 'error';
         }
 
     }

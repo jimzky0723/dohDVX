@@ -381,19 +381,19 @@ function checkDescriptionUpdate(description){
 
 function divisionValidate(){
     if($("#division").val() == ""){
-        $('#form').attr('onsubmit','return false;');
+        $('#forms').attr('onsubmit','return false;');
         $("#divisionBorder").css({'border': '2px solid red'});
     } else {
         $("#divisionBorder").removeAttr("style");
     }
     if($("#head").val() == ""){
-        $('#form').attr('onsubmit','return false;');
+        $('#forms').attr('onsubmit','return false;');
         $("#headBorder").css({'border': '2px solid red'});
     } else {
         $("#headBorder").removeAttr("style");
     }
     if($("#division").val() && $("#description").val() && $("#head").val() != ""){
-        $('#form').attr('onsubmit','return true;');
+        $('#forms').attr('onsubmit','return true;');
     }
 }
 

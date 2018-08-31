@@ -35,8 +35,8 @@
         {{ csrf_field() }}
         <div class="login-box-body">
             <p class="login-box-msg">Sign in to start your session</p>
-            <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-                <input id="username" autocomplete="off" type="text" placeholder="Login ID" class="form-control" name="username" value="{{ old('username') }}">
+            <div class="form-group has-feedback {{ Session::has('username') ? ' has-error' : '' }}">
+                <input id="username" autocomplete="off" type="text" placeholder="Login ID" class="form-control" name="username" value="{{ Session::get('username') }}">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 <span class="help-block hide">
 
@@ -69,14 +69,11 @@
 <!-- Bootstrap 3.3.5 -->
 <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
 <script>
-    $('.btn-submit').on('click',function(){
+    $('.btn-submit').on('click',function(e){
         $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
-    });
-
-    $('.form-submit').submit(function(e){
-        e.preventDefault();
-        var username = $(this).find(':input#username').val();
-        var password = $(this).find(':input#password').val();
+        /*e.preventDefault();
+        var username = $("#username").val();
+        var password = $("#password").val();
         var link = "{{ url('login') }}";
         $.ajax({
             url: link,
@@ -104,8 +101,9 @@
                 },500);
 
             }
-        });
+        });*/
     });
+
 </script>
 </body>
 </html>

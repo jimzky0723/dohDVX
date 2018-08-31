@@ -80,3 +80,29 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="delete_dengvaxia">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #59ab91">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color: white"><i class="fa fa-question-circle"></i> DENGVAXIA Says:</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <font class="text-danger">
+                        Are you sure you want to delete this?
+                    </font>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ asset('delete_dengvaxia') }}" method="post">
+                    {{ csrf_field() }}
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
+                    <button type="submit" id="dengDelBtn" value="" name="delete_dengvaxia" class="btn btn-danger" ><i class="fa fa-trash"></i> Yes</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

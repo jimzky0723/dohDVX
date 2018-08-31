@@ -51,6 +51,8 @@ class Dengvaxia extends Model
         'second_dose_age',
         'second_dose_reasons_refused',
         'tsekap_id',
-        'status'
+        'status',
+        'created_at',
+        'updated_at'
     ];
 }
